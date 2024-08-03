@@ -49,6 +49,7 @@ public class TicketController {
         return t;	
 	}
 	
+	//http://localhost:6767/irctc/validateBankCreds
 	@PostMapping("/validateBankCreds")
 	public Boolean validateBank(@RequestBody BankLoginCreds loginCreds) {
 		//restTemplate.getForEntity("http://localhost:9999/obs/consumerlogin")
