@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.irctc.project.model.BankLoginCreds;
@@ -20,6 +21,8 @@ import com.irctc.project.model.ticketpassenger;
 import com.irctc.project.repository.PassengerRepository;
 import com.irctc.project.repository.TicketRepository;
 import com.irctc.project.service.TicketService;
+
+import reactor.core.publisher.Mono;
 
 @RestController
 @CrossOrigin(origins="http://localhost:4200")
@@ -34,8 +37,11 @@ public class TicketController {
 	@Autowired
 	private TicketService tService;
 	
+//	@Autowired
+//	private RestTemplate restTemplate;
+	
 	@Autowired
-	private RestTemplate restTemplate;
+	private WebClient webClient;
 	
 	@PostMapping("/addTicket")
 	public Ticket addTicket(@RequestBody TicketRequest ticket) {
@@ -46,9 +52,12 @@ public class TicketController {
 	@PostMapping("/validateBankCreds")
 	public Boolean validateBank(@RequestBody BankLoginCreds loginCreds) {
 		//restTemplate.getForEntity("http://localhost:9999/obs/consumerlogin")
-		ResponseEntity<Boolean> responseEntity=restTemplate.postForEntity("http://localhost:9999/obs/data/userlogin", loginCreds,Boolean.class);
+//		ResponseEntity<Boolean> responseEntity=restTemplate.postForEntity("http://localhost:9999/obs/data/userlogin", loginCreds,Boolean.class);
+//		
+//		Boolean b=responseEntity.getBody();
+		Boolean b=webClient.post().uri("http://localhost:9999/obs/data/userlogin").body(Mono.just(loginCreds), BankLoginCreds.class).retrieve().bodyToMono(Boolean.class).block();
 		
-		Boolean b=responseEntity.getBody();
+		
 		return b;
 		
 		
