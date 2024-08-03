@@ -60,10 +60,16 @@ public class TicketController {
 		
 		
 		return b;
-		
-		
+			
 	}
 
+	@GetMapping("/getBankID/{mail}")
+	public String getBankID(@PathVariable String mail){
+		
+		String BankId=webClient.get().uri("http://localhost:9999/obs/data/getId/" + mail).retrieve().bodyToMono(String.class).block();
+		return BankId;
+		
+	}
 	
 	
 	@GetMapping("/getTicket/{id}")
