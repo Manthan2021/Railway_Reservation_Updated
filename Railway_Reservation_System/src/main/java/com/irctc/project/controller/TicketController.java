@@ -20,6 +20,7 @@ import com.irctc.project.model.TicketRequest;
 import com.irctc.project.model.ticketpassenger;
 import com.irctc.project.repository.PassengerRepository;
 import com.irctc.project.repository.TicketRepository;
+import com.irctc.project.service.APIClient;
 import com.irctc.project.service.TicketService;
 
 import reactor.core.publisher.Mono;
@@ -37,11 +38,13 @@ public class TicketController {
 	@Autowired
 	private TicketService tService;
 	
+    
+	private APIClient apiClient;
 //	@Autowired
 //	private RestTemplate restTemplate;
 	
-	@Autowired
-	private WebClient webClient;
+//	@Autowired
+//	private WebClient webClient;
 	
 	@PostMapping("/addTicket")
 	public Ticket addTicket(@RequestBody TicketRequest ticket) {
@@ -50,23 +53,25 @@ public class TicketController {
 	}
 	
 	//http://localhost:6767/irctc/validateBankCreds
-	@PostMapping("/validateBankCreds")
-	public Boolean validateBank(@RequestBody BankLoginCreds loginCreds) {
-		//restTemplate.getForEntity("http://localhost:9999/obs/consumerlogin")
-//		ResponseEntity<Boolean> responseEntity=restTemplate.postForEntity("http://localhost:9999/obs/data/userlogin", loginCreds,Boolean.class);
+//	@PostMapping("/validateBankCreds")
+//	public Boolean validateBank(@RequestBody BankLoginCreds loginCreds) {
+//		//restTemplate.getForEntity("http://localhost:9999/obs/consumerlogin")
+////		ResponseEntity<Boolean> responseEntity=restTemplate.postForEntity("http://localhost:9999/obs/data/userlogin", loginCreds,Boolean.class);
+////		
+////		Boolean b=responseEntity.getBody();
+//		Boolean b=webClient.post().uri("http://localhost:9999/obs/data/userlogin").body(Mono.just(loginCreds), BankLoginCreds.class).retrieve().bodyToMono(Boolean.class).block();
 //		
-//		Boolean b=responseEntity.getBody();
-		Boolean b=webClient.post().uri("http://localhost:9999/obs/data/userlogin").body(Mono.just(loginCreds), BankLoginCreds.class).retrieve().bodyToMono(Boolean.class).block();
-		
-		
-		return b;
-			
-	}
+//		
+//		return b;
+//			
+//	}
 
 	@GetMapping("/getBankID/{mail}")
 	public String getBankID(@PathVariable String mail){
 		
-		String BankId=webClient.get().uri("http://localhost:9999/obs/data/getId/" + mail).retrieve().bodyToMono(String.class).block();
+		//String BankId=webClient.get().uri("http://localhost:9999/obs/data/getId/" + mail).retrieve().bodyToMono(String.class).block();
+		String BankId=apiClient.gettheId(mail);
+		
 		return BankId;
 		
 	}
